@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>移工配額試算</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>移工配額試算</h1>
+    <p class="muted">輸入後自動計算：單月 I/J、每季 K/L、全年 M/N</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>基本資料</h2>
+      <div class="grid">
+        <label>
+          公司名稱 (A)
+          <input id="company" type="text" placeholder="例如：OOO公司" />
+        </label>
+
+        <label>
+          原額比率 (B)（%）
+          <input id="ratioB" type="number" step="0.01" placeholder="例如 10" />
+        </label>
+
+        <label>
+          目前使用最大增額比率 (C)（%）
+          <input id="ratioC" type="number" step="0.01" placeholder="例如 15" />
+        </label>
+
+        <label>
+          小數位數
+          <select id="decimals">
+            <option value="1" selected>1 位（如 19.2）</option>
+            <option value="0">0 位（整數）</option>
+            <option value="2">2 位</option>
+          </select>
+        </label>
+      </div>
+      <div class="actions">
+        <button id="fillDemo" type="button">帶入範例（114/10-114/12）</button>
+        <button id="clearAll" type="button" class="ghost">清空</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>每月人數輸入（12 個月）</h2>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>月份</th>
+              <th>本籍 (D)</th>
+              <th>移工(原額) (E)</th>
+              <th>移工(增額) (F)</th>
+              <th>外國技術人力 (H)</th>
+              <th>投保總人數 (G)</th>
+              <th>單月 I 原額最多可用</th>
+              <th>單月 J 增額最多可用</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="muted">G = D + E + F + H</p>
+    </section>
+
+    <section class="card">
+      <h2>每季（3 個月平均）</h2>
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>區間</th>
+              <th>avg(D+E)</th>
+              <th>K 原額可用</th>
+              <th>avg(D+E+F)</th>
+              <th>L 增額可用</th>
+            </tr>
+          </thead>
+          <tbody id="qRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>全年（12 個月平均）</h2>
+      <div class="grid">
+        <div class="kpi">
+          <div class="kpiTitle">avg(D+E)</div>
+          <div class="kpiValue" id="avgDE">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiTitle">M 全年原額可用</div>
+          <div class="kpiValue" id="annualM">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiTitle">avg(D+E+F)</div>
+          <div class="kpiValue" id="avgDEF">—</div>
+        </div>
+        <div class="kpi">
+          <div class="kpiTitle">N 全年增額可用</div>
+          <div class="kpiValue" id="annualN">—</div>
+        </div>
+      </div>
+      <p class="muted">M = avg(D+E) * B，N = avg(D+E+F) * (B+C)</p>
+    </section>
+
+    <footer class="muted">
+      <small>提示：若你要「尚可用人數」也一起算（像 Excel 那樣扣掉已用平均），我也可以把欄位加上去。</small>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

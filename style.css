@@ -1,0 +1,77 @@
+:root{
+  --bg:#0b1020;
+  --card:#111a33;
+  --text:#e8ecff;
+  --muted:#a9b3d6;
+  --line:rgba(255,255,255,.12);
+  --accent:#6ea8fe;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, "Noto Sans TC", sans-serif;
+  background:linear-gradient(180deg, var(--bg), #070a14);
+  color:var(--text);
+}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+h1{margin:0 0 6px 0;font-size:22px}
+h2{margin:0 0 12px 0;font-size:16px}
+.muted{color:var(--muted);margin:6px 0 0 0}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  margin:14px 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+.grid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:12px;
+}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+input, select{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border-radius:10px;
+  padding:10px 10px;
+  outline:none;
+}
+input:focus, select:focus{border-color:rgba(110,168,254,.7);}
+
+.actions{display:flex;gap:10px;margin-top:12px}
+button{
+  border:1px solid rgba(110,168,254,.6);
+  background:rgba(110,168,254,.18);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+button.ghost{
+  border-color:var(--line);
+  background:rgba(255,255,255,.06);
+}
+
+.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:980px}
+th, td{padding:10px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric: tabular-nums;}
+th:first-child, td:first-child{text-align:left}
+thead th{position:sticky;top:0;background:rgba(17,26,51,.95);backdrop-filter: blur(6px);}
+
+.kpi{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  background:rgba(255,255,255,.04);
+}
+.kpiTitle{color:var(--muted);font-size:12px}
+.kpiValue{font-size:20px;margin-top:6px;color:var(--accent)}
+@media (max-width: 900px){
+  .grid{grid-template-columns: repeat(2, minmax(0, 1fr));}
+  table{min-width:1100px}
+}

@@ -57,8 +57,12 @@ button.ghost{
   background:rgba(255,255,255,.06);
 }
 
-.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
-table{width:100%;border-collapse:collapse;min-width:980px}
+.tableWrap{overflow-x: hidden;border:1px solid var(--line);border-radius:12px}
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout: fixed;   /* 關鍵 */
+}
 th, td{padding:10px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric: tabular-nums;}
 th:first-child, td:first-child{text-align:left}
 thead th{position:sticky;top:0;background:rgba(17,26,51,.95);backdrop-filter: blur(6px);}
@@ -75,3 +79,16 @@ thead th{position:sticky;top:0;background:rgba(17,26,51,.95);backdrop-filter: bl
   .grid{grid-template-columns: repeat(2, minmax(0, 1fr));}
   table{min-width:1100px}
 }
+th, td {
+  font-size: 13px;
+  padding: 8px;
+  white-space: nowrap;
+}
+th:nth-child(1), td:nth-child(1) { width: 60px; }   /* 月份 */
+th:nth-child(2), td:nth-child(2) { width: 90px; }   /* 本籍 */
+th:nth-child(3), td:nth-child(3) { width: 100px; }  /* 原額 */
+th:nth-child(4), td:nth-child(4) { width: 100px; }  /* 增額 */
+th:nth-child(5), td:nth-child(5) { width: 110px; }  /* 外國技術 */
+th:nth-child(6), td:nth-child(6) { width: 110px; }  /* 投保總數 */
+th:nth-child(7), td:nth-child(7) { width: 120px; }  /* I */
+th:nth-child(8), td:nth-child(8) { width: 120px; }  /* J */

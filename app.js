@@ -187,3 +187,90 @@ document.addEventListener("DOMContentLoaded", () => {
   el("clearAll").addEventListener("click", clearAll);
   recalc();
 });
+function exportToExcel(){
+  if (typeof XLSX === "undefined"){
+    alert("Excel 匯出模組尚未載入，請確認已加入 xlsx.full.min.js");
+    return;
+  }
+
+  const company = (el("company")?.value || "").trim() || "未命名";
+  const B = n(el("ratioB").value); // %
+  const C = n(el("ratioC").value); // %
+
+  const data = getMonthData();
+
+  // 1) 月資料工作表：含輸入 + 計算結果
+  const ws1 = [];
+  ws1.push([
+    "月份","本籍(D)","移工(原額)(E)","移工(增額)(F)","外國技術人力(H)",
+    "投保總人數(G)","單月I 原額最多可用","單月J 增額最多可用"
+  ]);
+
+  data.forEach((r, idx) => {
+    const G = Number(el(`G-${idx}`)?.textContent || 0);
+    const I = Number(el(`I-${idx}`)?.textContent || 0);
+    const J = Number(el(`J-${idx}`)?.textContent || 0);
+
+    ws1.push([
+      months[idx],
+      r.D, r.E, r.F, r.H,
+      G, I, J
+    ]);
+  });
+
+  // 2) 每季工作表：由畫面上 qRows 直接讀（避免重算差異）
+  const ws2 = [];
+  ws2.push(["區間","本籍+原額 三個月平均","原額可用(K)","本籍+原額+增額 三個月平均","增額可用(L)"]);
+
+  const qtrs = Array.from(document.querySelectorAll("#qRows tr"));
+  qtrs.forEach(tr => {
+    const tds = Array.from(tr.querySelectorAll("td")).map(td => td.textContent.trim());
+    // [區間, avgDE, K, avgDEF, L]
+    ws2.push(tds);
+  });
+
+  // 3) 全年工作表：KPI
+  const ws3 = [];
+  ws3.push(["項目","數值"]);
+  ws3.push(["公司名稱(A)", company]);
+  ws3.push(["原額比率(B) (%)", B]);
+  ws3.push(["目前使用最大增額比率(C) (%)", C]);
+  ws3.push(["本籍+原額 全年平均人數", el("avgDE")?.textContent || "—"]);
+  ws3.push(["全年 原額可用(M)", el("annualM")?.textContent || "—"]);
+  ws3.push(["本籍+原額+增額 全年平均人數", el("avgDEF")?.textContent || "—"]);
+  ws3.push(["全年 增額可用(N)", el("annualN")?.textContent || "—"]);
+
+  // 4) 組成 xlsx
+  const wb = XLSX.utils.book_new();
+
+  const sheet1 = XLSX.utils.aoa_to_sheet(ws1);
+  const sheet2 = XLSX.utils.aoa_to_sheet(ws2);
+  const sheet3 = XLSX.utils.aoa_to_sheet(ws3);
+
+  // 欄寬（讓 Excel 開起來好讀）
+  sheet1["!cols"] = [
+    { wch: 8 }, { wch: 10 }, { wch: 14 }, { wch: 14 }, { wch: 16 },
+    { wch: 14 }, { wch: 18 }, { wch: 18 }
+  ];
+  sheet2["!cols"] = [{ wch: 10 }, { wch: 20 }, { wch: 14 }, { wch: 22 }, { wch: 14 }];
+  sheet3["!cols"] = [{ wch: 22 }, { wch: 18 }];
+
+  XLSX.utils.book_append_sheet(wb, sheet1, "每月明細");
+  XLSX.utils.book_append_sheet(wb, sheet2, "每季平均");
+  XLSX.utils.book_append_sheet(wb, sheet3, "全年摘要");
+
+  // 檔名：公司_日期
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth()+1).padStart(2,"0");
+  const d = String(now.getDate()).padStart(2,"0");
+  const filename = `${company}_移工配額試算_${y}${m}${d}.xlsx`;
+
+  XLSX.writeFile(wb, filename);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // 你原本已有的監聽保留
+  const btn = el("exportXlsx");
+  if (btn) btn.addEventListener("click", exportToExcel);
+});
